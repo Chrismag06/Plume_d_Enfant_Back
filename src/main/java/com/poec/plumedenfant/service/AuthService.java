@@ -16,6 +16,7 @@ import com.poec.plumedenfant.dao.model.RoleEnum;
 import com.poec.plumedenfant.dao.model.Utilisateur;
 import com.poec.plumedenfant.dto.InscriptionDto;
 import com.poec.plumedenfant.dto.LoginDto;
+import com.poec.plumedenfant.exception.EmailAlreadyUsedException;
 
 @Service
 public class AuthService {
@@ -51,7 +52,14 @@ public class AuthService {
 		return token;
 	}
 	
-	public Utilisateur register(InscriptionDto inscriptionDto) {
+	public Utilisateur register(InscriptionDto inscriptionDto) throws EmailAlreadyUsedException {
+		
+		// Chercher si un utilisateur n'existe pas déjà avec cet email
+		String email = inscriptionDto.getEmail();
+		if(utilisateurDao.findByEmail(email).isPresent()) {
+			throw new EmailAlreadyUsedException("Email déjà utilisé");
+		}
+		
 		// Créer un nouvel utilisateur depuis l'inscription DTO
 		Utilisateur utilisateur = new Utilisateur();
 		utilisateur.setEmail(inscriptionDto.getEmail());

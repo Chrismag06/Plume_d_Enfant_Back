@@ -11,6 +11,9 @@ import com.poec.plumedenfant.dao.model.CategorieAge;
 import com.poec.plumedenfant.dao.model.CategorieHistoire;
 import com.poec.plumedenfant.dao.model.FormulaireHistoire;
 import com.poec.plumedenfant.dao.model.Histoire;
+import com.poec.plumedenfant.exception.IAGenerationHistoireException;
+import com.poec.plumedenfant.exception.IAGenerationImageException;
+import com.poec.plumedenfant.exception.IdUtilisateurIntrouvableException;
 
 
 @Service
@@ -44,21 +47,34 @@ public class HistoireService {
 	
 	
 	// Creation de l'histoire
-	public void insertHistoire(String request, int idCreateur, CategorieHistoire categorieHistorie, CategorieAge categorieAge) {
+	public void insertHistoire(String request, int idCreateur, CategorieHistoire categorieHistoire, CategorieAge categorieAge) 
+			throws IdUtilisateurIntrouvableException, IAGenerationHistoireException, IAGenerationImageException {
 		Histoire histoire = new Histoire();
 		histoire.setId(null);
-		histoire.setCategorieHistoire(categorieHistorie);
+		histoire.setCategorieHistoire(categorieHistoire);
 		histoire.setCategorieAge(categorieAge);
-		utilisateurService.getUtilisateurById(idCreateur).ifPresent(utilisateur -> {
-			histoire.setCreateur(utilisateur);
-		});
+		
+		// Vérification que l'id du créateur est trouvable
+		if(utilisateurService.getUtilisateurById(idCreateur).isEmpty()) {
+			throw new IdUtilisateurIntrouvableException("Utilisateur introuvable");
+		} else {
+			utilisateurService.getUtilisateurById(idCreateur).ifPresent(utilisateur -> {
+				histoire.setCreateur(utilisateur);
+			});
+		}
 		
 		System.out.println(request);
 		String contenuHistoire = iaService.faireRequete(request);
 		
+		// Vérification des erreurs lors de la génération d'histoire
+		if(contenuHistoire.equals("error")) {
+			throw new IAGenerationHistoireException("Erreur lors de la génération d'histoire");
+		}
+		
 		// Extraction du titre pour le mettre dans l'attribut titre
 		int finTitre = contenuHistoire.indexOf("\n");
 		String titre = contenuHistoire.substring(0, finTitre);
+		titre = titre.replaceAll("^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "").trim();
 		contenuHistoire = contenuHistoire.substring(finTitre + 2); 
 		histoire.setTitre(titre);
 		
@@ -69,6 +85,11 @@ public class HistoireService {
 		
 		// Récupération de l'image en B64Json
 		String imageB64Json = "data:image/png;base64," + iaService.creerImage(creationRequeteImage(contenuHistoire));
+		
+		// Vérification des erreurs lors de la génération d'image
+		if(imageB64Json.equals("data:image/png;base64,error")) {
+			throw new IAGenerationImageException("Erreur lors de la génération d'image");
+		}
 		if(!imageB64Json.equals("error")) {
 			histoire.setImageB64Json(imageB64Json);
 		}

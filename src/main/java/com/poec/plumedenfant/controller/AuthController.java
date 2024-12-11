@@ -41,8 +41,14 @@ public class AuthController {
 	
 	@PostMapping("/inscription")
 	public ResponseEntity<Utilisateur> register(@RequestBody InscriptionDto inscriptionDto) {
-		Utilisateur utilisateur = authService.register(inscriptionDto);
-		return new ResponseEntity<>(utilisateur, HttpStatus.CREATED);
+		try {
+			Utilisateur utilisateur = authService.register(inscriptionDto);
+			return new ResponseEntity<>(utilisateur, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		
+		
 	}
 	
 	
