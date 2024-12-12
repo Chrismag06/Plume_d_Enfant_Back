@@ -1,6 +1,9 @@
 package com.poec.plumedenfant.service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.poec.plumedenfant.exception.IAGenerationHistoireException;
+import com.poec.plumedenfant.exception.IAGenerationImageException;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -36,7 +41,7 @@ public class IAService {
     		.writeTimeout(60, TimeUnit.SECONDS)
     		.build();
     
-	public String faireRequete(String prompt) { 
+	public String faireRequete(String prompt) throws IAGenerationHistoireException { 
 		
 		// Création du corps de la requête JSON
 	    JsonObject requestBody = new JsonObject();
@@ -93,15 +98,15 @@ public class IAService {
 	            return assistantResponse;
 	        } else {
 	            System.out.println("Request failed: " + response.code());
-	            return "error";
+	            throw new IAGenerationHistoireException("Erreur lors de la génération d'histoire : La réponse de l'IA n'est pas reçue");
 	        }
 	    } catch (IOException e) {
 	        e.printStackTrace();
-	        return "error";
+	        throw new IAGenerationHistoireException("Erreur lors de la génération d'histoire : La requête n'est pas envoyée à l'IA");
 	    }
 	}
 	
-	public String creerImage(String prompt) {
+	public InputStream creerImage(String prompt) throws IAGenerationImageException {
 		
 		// Création du corps de la requête JSON
 	    JsonObject requestBody = new JsonObject();
@@ -110,7 +115,6 @@ public class IAService {
 	    requestBody.addProperty("model", "dall-e-3");
 	    requestBody.addProperty("prompt", prompt);
 	    requestBody.addProperty("n", 1);
-	    requestBody.addProperty("response_format", "b64_json");
 	    requestBody.addProperty("size", "1024x1024");
 	    
 	    String json = requestBody.toString();
@@ -128,7 +132,7 @@ public class IAService {
 	    
 	    // Execution de la requete
 	    try (Response response = client.newCall(request).execute()) {
-	    	String imageB64Json;
+	    	String urlImageOpenAI;
 	    	
 	    	if(response.isSuccessful()) {
 	    		
@@ -139,22 +143,44 @@ public class IAService {
 	            JsonObject responseJson = JsonParser.parseString(responseBody).getAsJsonObject();
 	            JsonArray dataArray = responseJson.getAsJsonArray("data");
 	            JsonObject imageData = dataArray.get(0).getAsJsonObject();
-	            imageB64Json = imageData.get("b64_json").getAsString();
+	            urlImageOpenAI = imageData.get("url").getAsString();
+	            System.out.println(urlImageOpenAI);
 	    	} else {
 	    		System.err.println("Erreur lors de la génération d'image : " + response.code());
 	    		System.out.println(response.body().string());
-	    		return "error";
+	    		throw new IAGenerationImageException("Erreur lors de la génération d'images : La réponse de l'IA n'est pas reçue");
 	    	}
 	    	
 	    	response.close();
-	    	return imageB64Json;
+	    	return downloadImageFromURL(urlImageOpenAI);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "error";
+			throw new IAGenerationImageException("Erreur lors de la génération d'images : La requête n'est pas envoyée à l'IA");
 		}
 		
 	}
+	
+	// Telechargement de l'image depuis l'URL fourni par l'API de OpenAI
+	private static InputStream downloadImageFromURL(String imageUrl) throws IOException {
+		
+		URL url = new URL(imageUrl);
+		
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("GET");
+		connection.setConnectTimeout(5000);
+		connection.setReadTimeout(5000);
+		
+		// Verifier la connexion http
+		if(connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+			throw new IOException("Erreur lors du téléchargement de l'image");
+		}
+		
+		return connection.getInputStream();
+	
+	}
+	
+	
 	
 	
 	

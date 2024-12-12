@@ -2,11 +2,13 @@ package com.poec.plumedenfant.service;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +39,9 @@ public class HistoireServiceTest {
 	
 	@Mock
 	private IAService iaService;
+	
+	@Mock
+	private S3Service s3Service;
 	
 	@Mock
 	private HistoireDao histoireDao;
@@ -76,7 +81,11 @@ public class HistoireServiceTest {
 		
 		// Simuler la réponse de iaService pour la creation d'image
 		when(iaService.creerImage(any(String.class)))
-			.thenReturn("imageBase64");
+			.thenReturn(mock(InputStream.class));
+		
+		// Simuler la réponse de S3Service pour le stockage d'image
+		when(s3Service.uploadImage(any(InputStream.class), any(String.class)))
+			.thenReturn("urlImage");
 		
 		// Appel de la méthode insert
 		histoireService.insertHistoire(request, idCreateur, categorieHistoire, categorieAge);
@@ -95,7 +104,8 @@ public class HistoireServiceTest {
 	}
 	
 	@Test
-	public void insertHistoireTest_WhereUtilisateurUnknown() throws IdUtilisateurIntrouvableException {
+	public void insertHistoireTest_WhereUtilisateurUnknown() 
+			throws IdUtilisateurIntrouvableException, IAGenerationImageException, IAGenerationHistoireException {
 		// Simulation de utilisateur non trouvé
 		when(utilisateurService.getUtilisateurById(any(Integer.class)))
 			.thenReturn(Optional.empty());
@@ -106,7 +116,11 @@ public class HistoireServiceTest {
 		
 		// Simuler la réponse de iaService pour la creation d'image
 		when(iaService.creerImage(any(String.class)))
-			.thenReturn("imageBase64");
+			.thenReturn(mock(InputStream.class));
+		
+		// Simuler la réponse de S3Service pour le stockage d'image
+		when(s3Service.uploadImage(any(InputStream.class), any(String.class)))
+			.thenReturn("urlImage");
 		
 		// Vérifications
 		verify(histoireDao, never()).save(any(Histoire.class));
@@ -114,49 +128,5 @@ public class HistoireServiceTest {
 			histoireService.insertHistoire(request, idCreateur, categorieHistoire, categorieAge);
 		});
 	}
-	
-	@Test
-	public void insertHistoireTest_WhereIaErrorGenerationHistoire() {
-		// Simulation de la récupération de l'utilisateur
-		when(utilisateurService.getUtilisateurById(any(Integer.class)))
-			.thenReturn(Optional.of(utilisateur));
-		
-		// Simuler l'erreur de la pars de l'IA pour la génération d'histoire
-		when(iaService.faireRequete(any(String.class)))
-			.thenReturn("error");
-		
-		// Simuler la réponse de iaService pour la creation d'image
-		when(iaService.creerImage(any(String.class)))
-			.thenReturn("imageBase64");
-		
-		// Vérifications
-		verify(histoireDao, never()).save(any(Histoire.class));
-		assertThrows(IAGenerationHistoireException.class, () -> {
-			histoireService.insertHistoire(request, idCreateur, categorieHistoire, categorieAge);
-		});
-	}
-	
-	@Test
-	public void insertHistoireTest_WhereIaErrorGenerationImage() {
-		// Simulation de la récupération de l'utilisateur
-		when(utilisateurService.getUtilisateurById(any(Integer.class)))
-			.thenReturn(Optional.of(utilisateur));
-		
-		// Simuler la réponse de iaService pour la création d'histoire
-		when(iaService.faireRequete(any(String.class)))
-			.thenReturn("***Titre de l'histoire***\n C'est un beau roman, c'est une belle histoire");
-		
-		// Simuler l'erreur de la pars de l'IA pour la génération d'image
-		when(iaService.creerImage(any(String.class)))
-			.thenReturn("error");
-		
-		// Vérifications
-		verify(histoireDao, never()).save(any(Histoire.class));
-		assertThrows(IAGenerationImageException.class, () -> {
-			histoireService.insertHistoire(request, idCreateur, categorieHistoire, categorieAge);
-		});
-	}
-	
-	
 
 }

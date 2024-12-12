@@ -35,8 +35,8 @@ public class Histoire implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private CategorieAge categorieAge;
 	
-	@Column(columnDefinition = "LONGTEXT")
-	private String imageB64Json;
+	@Column
+	private String urlImage;
 	
 	@Column
 	private Integer nbLike;
@@ -85,12 +85,12 @@ public class Histoire implements Serializable {
 		this.categorieAge = categorieAge;
 	}
 
-	public String getImageB64Json() {
-		return imageB64Json;
+	public String getUrlImage() {
+		return urlImage;
 	}
 
-	public void setImageB64Json(String urlImage) {
-		this.imageB64Json = urlImage;
+	public void setUrlImage(String urlImage) {
+		this.urlImage = urlImage;
 	}
 
 	public Integer getNbLike() {

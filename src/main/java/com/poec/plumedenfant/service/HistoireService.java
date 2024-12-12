@@ -1,5 +1,6 @@
 package com.poec.plumedenfant.service;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,15 +29,18 @@ public class HistoireService {
 	@Autowired
 	private UtilisateurService utilisateurService;
 	
+	@Autowired
+	private S3Service s3Service;
+	
 	// Création de la requete pour le corps de l'histoire
 	public String creationRequete(FormulaireHistoire formulaire) {
-		return "Ecris moi une histoire, en français, sur le thème " + formulaire.getCategorieHistoire().getValeur() +
+		return "Ecris moi une histoire d'environ 1000 mots, en français, sur le thème " + formulaire.getCategorieHistoire().getValeur() +
 				" pour un enfant de " + formulaire.getCategorieAge().getValeur() +
 				". Le personnage principal s'appelle " + formulaire.getNomPersoPrincipal() + ". " + 
 				formulaire.getDetailPersoPrincipal() +
 				formulaire.getPhraseListePersoSecondaire() + 
 				formulaire.getPhraseDetailsSupplementaires() + 
-				". Donne un titre à cette histoire sur la première ligne sans utiliser de décoration de texte, l'histoire doit faire environ 600 mots, aére bien le texte en faisant des paragraphes, n'écris pas FIN à la fin, ne met pas de commentaires je ne veux voir que l'histoire "
+				". Donne un titre à cette histoire sur la première ligne sans utiliser de décoration de texte, n'écris pas FIN à la fin, ne met pas de commentaires je ne veux voir que l'histoire "
 				;
 		}
 	
@@ -66,11 +70,6 @@ public class HistoireService {
 		System.out.println(request);
 		String contenuHistoire = iaService.faireRequete(request);
 		
-		// Vérification des erreurs lors de la génération d'histoire
-		if(contenuHistoire.equals("error")) {
-			throw new IAGenerationHistoireException("Erreur lors de la génération d'histoire");
-		}
-		
 		// Extraction du titre pour le mettre dans l'attribut titre
 		int finTitre = contenuHistoire.indexOf("\n");
 		String titre = contenuHistoire.substring(0, finTitre);
@@ -79,20 +78,16 @@ public class HistoireService {
 		histoire.setTitre(titre);
 		
 		// On met le corps de l'histoire sans le titre
-		if(!contenuHistoire.equals("error")) {
-			histoire.setCorps(contenuHistoire);
-		}
+		histoire.setCorps(contenuHistoire);
 		
-		// Récupération de l'image en B64Json
-		String imageB64Json = "data:image/png;base64," + iaService.creerImage(creationRequeteImage(contenuHistoire));
+		// Récupération de l'inputStream
+		InputStream inputStreamImage = iaService.creerImage(creationRequeteImage(contenuHistoire));
 		
-		// Vérification des erreurs lors de la génération d'image
-		if(imageB64Json.equals("data:image/png;base64,error")) {
-			throw new IAGenerationImageException("Erreur lors de la génération d'image");
-		}
-		if(!imageB64Json.equals("error")) {
-			histoire.setImageB64Json(imageB64Json);
-		}
+		// Récupération de l'url de l'image sur S3
+		String urlImage = s3Service.uploadImage(inputStreamImage, titre);
+		
+		// Stockage de l'url dans notre BDD
+		histoire.setUrlImage(urlImage);
 		
 		// Initialisation du nombre de like
 		histoire.setNbLike(0);
@@ -138,8 +133,8 @@ public class HistoireService {
 				histoireDao.updateTitre(idHistoire, histoire.getTitre());
 			}
 			// update de l'image de l'histoire
-			if(histoire.getImageB64Json() != null) {
-				histoireDao.updateUrlImage(idHistoire, histoire.getImageB64Json());
+			if(histoire.getUrlImage() != null) {
+				histoireDao.updateUrlImage(idHistoire, histoire.getUrlImage());
 			}
 		} else {
 			System.out.println("Update impossible : L'histoire n'est pas reconnue");

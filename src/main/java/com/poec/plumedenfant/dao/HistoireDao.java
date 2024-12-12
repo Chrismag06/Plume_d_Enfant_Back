@@ -28,8 +28,8 @@ public interface HistoireDao extends CrudRepository<Histoire, Integer> {
 	
 	@Modifying
 	@Transactional
-	@Query("UPDATE Histoire h set h.imageB64Json = :imageB64Json WHERE h.id =:idHistoire")
-	public void updateUrlImage(int idHistoire, String imageB64Json);
+	@Query("UPDATE Histoire h set h.urlImage = :urlImage WHERE h.id =:idHistoire")
+	public void updateUrlImage(int idHistoire, String urlImage);
 	
 	@Query("SELECT h FROM Histoire h ORDER BY h.nbLike DESC")
 	public List<Histoire> findAllHistoiresSortedByLike();
