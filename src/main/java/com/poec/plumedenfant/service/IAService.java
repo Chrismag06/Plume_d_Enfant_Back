@@ -46,7 +46,7 @@ public class IAService {
 		// Création du corps de la requête JSON
 	    JsonObject requestBody = new JsonObject();
 		
-	    requestBody.addProperty("model", "gpt-3.5-turbo-0125"); // Modèle GPT-3.5 (ou GPT-4)
+	    requestBody.addProperty("model", "gpt-4o-mini"); // Modèle GPT-3.5 (ou GPT-4) deja utilisé : gpt-3.5-turbo-0125
 	    
 	    JsonArray messages = new JsonArray();
 
