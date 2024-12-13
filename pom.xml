@@ -12,7 +12,7 @@
 	<artifactId>plumedenfant</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>plumedenfant</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Backend de l'appli Plume d'enfant</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -141,6 +141,14 @@
 		    <version>4.12.0</version>
 		    <scope>test</scope>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-gpg-plugin -->
+		<dependency>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-gpg-plugin</artifactId>
+		    <version>3.2.7</version>
+		</dependency>
+
 
 
 		
