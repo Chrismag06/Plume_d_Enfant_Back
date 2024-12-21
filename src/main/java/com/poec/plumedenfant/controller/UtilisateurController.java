@@ -95,7 +95,7 @@ public class UtilisateurController {
 			utilisateurService.deleteUtilisateurById(idUtilisateur);
 			return ResponseEntity
 					.status(HttpStatus.OK)
-					.body("L'utilisateur a été supprimé");
+					.body("Utilisateur supprimé");
 		} catch (Exception e) {
 			return ResponseEntity
 					.status(HttpStatus.CONFLICT)

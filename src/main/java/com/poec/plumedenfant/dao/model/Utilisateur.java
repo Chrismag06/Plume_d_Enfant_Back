@@ -39,7 +39,7 @@ public class Utilisateur implements Serializable {
 	private List<Histoire> listeVue;
 	
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "user_role", 
 				joinColumns = @JoinColumn(name = "utilisateur_id", referencedColumnName = "id"),
 				inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
