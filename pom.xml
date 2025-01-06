@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>23</java.version>
+		<dep.cucumber.version>4.8.0</dep.cucumber.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -141,9 +142,31 @@
 		    <version>4.12.0</version>
 		    <scope>test</scope>
 		</dependency>
-
-
 		
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-jvm</artifactId>
+            <version>${dep.cucumber.version}</version>
+            <scope>test</scope>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${dep.cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${dep.cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
