@@ -12,7 +12,7 @@
 	<artifactId>plumedenfant</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>plumedenfant</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Backend de l'appli Plume d'enfant</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -142,6 +142,10 @@
 		    <version>4.12.0</version>
 		    <scope>test</scope>
 		</dependency>
+<<<<<<< HEAD
+=======
+
+>>>>>>> b318a14cc4f458f78e8989459191e47f2673d4ef
 		
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
@@ -182,6 +186,8 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			
+			
 		</plugins>
 	</build>
 
