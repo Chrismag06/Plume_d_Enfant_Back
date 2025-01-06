@@ -35,3 +35,4 @@ build/
 # Ignorer le fichier application.properties contenant des informations sensibles
 /src/main/resources/application.properties
 
+/.apt_generated_tests/
