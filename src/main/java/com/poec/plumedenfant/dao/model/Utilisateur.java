@@ -33,6 +33,9 @@ public class Utilisateur implements Serializable {
 	private String mdp;
 	
 	@OneToMany
+	private List<Histoire> listeLike;
+	
+	@OneToMany
 	private List<Histoire> listeFavori;
 	
 	@OneToMany
@@ -68,6 +71,14 @@ public class Utilisateur implements Serializable {
 
 	public void setMdp(String mdp) {
 		this.mdp = mdp;
+	}
+
+	public List<Histoire> getListeLike() {
+		return listeLike;
+	}
+
+	public void setListeLike(List<Histoire> listeLike) {
+		this.listeLike = listeLike;
 	}
 
 	public List<Histoire> getListeFavori() {

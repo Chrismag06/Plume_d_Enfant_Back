@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.poec.plumedenfant.dao.model.Histoire;
 import com.poec.plumedenfant.dao.model.Utilisateur;
 import com.poec.plumedenfant.service.UtilisateurService;
 
@@ -30,7 +31,7 @@ public class UtilisateurController {
 	
 	// Récupération d'un utilisateur
 	@GetMapping("/{idUtilisateur}")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
 	public Optional<Utilisateur> getUtilisateurById(@PathVariable int idUtilisateur) {
 		Optional<Utilisateur> utilisateurRecup = utilisateurService.getUtilisateurById(idUtilisateur);
 		if(!utilisateurRecup.isEmpty()) {
@@ -39,8 +40,6 @@ public class UtilisateurController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé");
 		}
 	}
-	
-	
 	
 	// Récupération de la liste des utilisateurs
 	@GetMapping("")

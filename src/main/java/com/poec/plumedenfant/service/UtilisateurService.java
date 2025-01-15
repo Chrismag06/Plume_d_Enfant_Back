@@ -46,10 +46,19 @@ public class UtilisateurService {
 			if(utilisateur.getMdp() != null) {
 				utilisateurDao.updateMdp(idUtilisateur, utilisateur.getMdp());
 			}
-			if(!utilisateur.getListeFavori().isEmpty()) {
+			if(utilisateur.getListeLike() != null) {
+				// utilisateurDao.updateListLike(idUtilisateur, utilisateur.getListeLike());
+				if(utilisateurDao.findById(idUtilisateur) != null) {
+					Utilisateur user = utilisateurDao.findById(idUtilisateur).get();
+					user.setListeLike(utilisateur.getListeLike());
+					user.setId(idUtilisateur);
+					utilisateurDao.save(user);
+				}
+			}
+			if(utilisateur.getListeFavori() != null) {
 				utilisateurDao.updateListFavori(idUtilisateur, utilisateur.getListeFavori());
 			}
-			if(!utilisateur.getListeVue().isEmpty()) {
+			if(utilisateur.getListeVue() != null) {
 				utilisateurDao.updateListVue(idUtilisateur, utilisateur.getListeVue());
 			}
 		} else {
@@ -62,6 +71,8 @@ public class UtilisateurService {
 	public void deleteUtilisateurById(int idUtilisateur) {
 		utilisateurDao.deleteById(idUtilisateur);
 	}
+	
+	
 	
 	
 }

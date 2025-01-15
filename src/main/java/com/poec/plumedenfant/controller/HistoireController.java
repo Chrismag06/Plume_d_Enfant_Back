@@ -44,8 +44,15 @@ public class HistoireController {
 		}
 	}
 	
-	// Récupération de la liste d'histoire
+	// Récupération de la liste d'histoire triée par id
 	@GetMapping("")
+	public List<Histoire> getAllHistoireSortedById() {
+		List<Histoire> listeRecup = (List<Histoire>) histoireService.getAllHistoireSortedById();
+		return listeRecup;
+	}
+	
+	// Récupération de la liste d'histoire triée par like
+	@GetMapping("byLike")
 	public List<Histoire> getAllHistoireSortedByLike() {
 		List<Histoire> listeRecup = (List<Histoire>) histoireService.getAllHistoireSortedByLike();
 		return listeRecup;
@@ -89,7 +96,7 @@ public class HistoireController {
 	
 	// Modification d'une histoire
 	@PatchMapping("/modification/{idHistoire}")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
 	public ResponseEntity<String> updateHistoire(@RequestBody Histoire histoire, @PathVariable int idHistoire) {
 		try {
 			histoireService.updateHistoire(histoire, idHistoire);

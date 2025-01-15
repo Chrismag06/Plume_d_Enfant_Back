@@ -108,7 +108,12 @@ public class HistoireService {
 		return histoireDao.findById(idHistoire);
 	}
 	
-	// Récupération de la liste d'histoire
+	// Récupération de la liste d'histoire triée par id
+		public List<Histoire> getAllHistoireSortedById() {
+			return (List<Histoire>) histoireDao.findAllHistoiresSortedById();
+		}
+	
+	// Récupération de la liste d'histoire triée par like
 	public List<Histoire> getAllHistoireSortedByLike() {
 		return (List<Histoire>) histoireDao.findAllHistoiresSortedByLike();
 	}

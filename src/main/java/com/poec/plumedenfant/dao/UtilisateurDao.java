@@ -25,6 +25,11 @@ public interface UtilisateurDao extends CrudRepository<Utilisateur, Integer> {
 	
 	@Modifying
 	@Transactional
+	@Query("UPDATE Utilisateur u set u.listeLike =:listLike WHERE u.id =:idUtilisateur")
+	public void updateListLike(int idUtilisateur, List<Histoire> listLike);
+	
+	@Modifying
+	@Transactional
 	@Query("UPDATE Utilisateur u set u.listeFavori =:listHistoire WHERE u.id =:idUtilisateur")
 	public void updateListFavori(int idUtilisateur, List<Histoire> listHistoire);
 	

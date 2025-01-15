@@ -2,6 +2,7 @@ package com.poec.plumedenfant.config;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.poec.plumedenfant.dao.model.Histoire;
 import com.poec.plumedenfant.service.UtilisateurService;
 
 import io.jsonwebtoken.Jwts;

@@ -31,6 +31,9 @@ public interface HistoireDao extends CrudRepository<Histoire, Integer> {
 	@Query("UPDATE Histoire h set h.urlImage = :urlImage WHERE h.id =:idHistoire")
 	public void updateUrlImage(int idHistoire, String urlImage);
 	
+	@Query("SELECT h FROM Histoire h ORDER BY h.id")
+	public List<Histoire> findAllHistoiresSortedById();
+	
 	@Query("SELECT h FROM Histoire h ORDER BY h.nbLike DESC")
 	public List<Histoire> findAllHistoiresSortedByLike();
 	
