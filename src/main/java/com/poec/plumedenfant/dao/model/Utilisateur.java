@@ -32,13 +32,22 @@ public class Utilisateur implements Serializable {
 	@Column
 	private String mdp;
 	
-	@OneToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name="user_like",
+				joinColumns = @JoinColumn(name="utilisateur_id", referencedColumnName = "id"),
+				inverseJoinColumns = @JoinColumn(name="histoire_id", referencedColumnName = "id"))
 	private List<Histoire> listeLike;
 	
-	@OneToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name="user_favori",
+				joinColumns = @JoinColumn(name="utilisateur_id", referencedColumnName = "id"),
+				inverseJoinColumns = @JoinColumn(name="histoire_id", referencedColumnName = "id"))
 	private List<Histoire> listeFavori;
 	
-	@OneToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name="user_vues",
+				joinColumns = @JoinColumn(name="utilisateur_id", referencedColumnName = "id"),
+				inverseJoinColumns = @JoinColumn(name="histoire_id", referencedColumnName = "id"))
 	private List<Histoire> listeVue;
 	
 	

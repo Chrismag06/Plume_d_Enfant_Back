@@ -56,10 +56,16 @@ public class UtilisateurService {
 				}
 			}
 			if(utilisateur.getListeFavori() != null) {
-				utilisateurDao.updateListFavori(idUtilisateur, utilisateur.getListeFavori());
+				// utilisateurDao.updateListFavori(idUtilisateur, utilisateur.getListeFavori());
 			}
 			if(utilisateur.getListeVue() != null) {
-				utilisateurDao.updateListVue(idUtilisateur, utilisateur.getListeVue());
+				// utilisateurDao.updateListVue(idUtilisateur, utilisateur.getListeVue());
+				if(utilisateurDao.findById(idUtilisateur) != null) {
+					Utilisateur user = utilisateurDao.findById(idUtilisateur).get();
+					user.setListeVue(utilisateur.getListeVue());
+					user.setId(idUtilisateur);
+					utilisateurDao.save(user);
+				}
 			}
 		} else {
 			System.out.println("Update impossible : L'utilisateur n'est pas reconnu");
