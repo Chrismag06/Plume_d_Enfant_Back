@@ -18,8 +18,8 @@ public interface HistoireDao extends CrudRepository<Histoire, Integer> {
 	
 	@Modifying
 	@Transactional
-	@Query("UPDATE Histoire h set h.nbLike = :nbLike WHERE h.id =:idHistoire")
-	public void updateNbLike(int idHistoire, int nbLike);
+	@Query("UPDATE Histoire h set h.nbLike = (SELECT COUNT(u) FROM Utilisateur u JOIN u.listeLike h WHERE h.id = :idHistoire) WHERE h.id =:idHistoire")
+	public void updateNbLike(int idHistoire);
 	
 	@Modifying
 	@Transactional
@@ -37,7 +37,7 @@ public interface HistoireDao extends CrudRepository<Histoire, Integer> {
 	@Query("SELECT h FROM Histoire h ORDER BY h.nbLike DESC")
 	public List<Histoire> findAllHistoiresSortedByLike();
 	
-	@Query("SELECT h FROM Histoire h WHERE h.Createur.id =:idUtilisateur")
+	@Query("SELECT h FROM Histoire h WHERE h.createur.id =:idUtilisateur")
 	public List<Histoire> getVosHistoiresCrees(int idUtilisateur);
 
 }

@@ -2,6 +2,10 @@ package com.poec.plumedenfant.dao.model;
 
 import java.io.Serializable;
 
+import org.hibernate.annotations.DynamicUpdate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
+@DynamicUpdate
 public class Histoire implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -43,7 +48,9 @@ public class Histoire implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "idCreateur")
-	private Utilisateur Createur;
+	//@JsonProperty("createur")
+	@JsonIgnore
+	private Utilisateur createur;
 
 	public Integer getId() {
 		return id;
@@ -102,11 +109,11 @@ public class Histoire implements Serializable {
 	}
 
 	public Utilisateur getCreateur() {
-		return Createur;
+		return createur;
 	}
 
 	public void setCreateur(Utilisateur createur) {
-		Createur = createur;
+		this.createur = createur;
 	}
 	
 	

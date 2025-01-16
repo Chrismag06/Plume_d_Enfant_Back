@@ -137,10 +137,6 @@ public class HistoireService {
 			if(histoire.getCorps() != null) {
 				histoireDao.updateCorps(idHistoire, histoire.getCorps());
 			}
-			// update du nombre de like de l'histoire
-			if(histoire.getNbLike() != null) {
-				histoireDao.updateNbLike(idHistoire, histoire.getNbLike());
-			}
 			// update du titre de l'histoire
 			if(histoire.getTitre() != null) {
 				histoireDao.updateTitre(idHistoire, histoire.getTitre());
@@ -149,6 +145,8 @@ public class HistoireService {
 			if(histoire.getUrlImage() != null) {
 				histoireDao.updateUrlImage(idHistoire, histoire.getUrlImage());
 			}
+			// update du nombre de like à chaque fois
+			histoireDao.updateNbLike(idHistoire);
 		} else {
 			System.out.println("Update impossible : L'histoire n'est pas reconnue");
 		}
