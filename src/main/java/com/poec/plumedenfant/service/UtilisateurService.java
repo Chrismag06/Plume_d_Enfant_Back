@@ -57,6 +57,12 @@ public class UtilisateurService {
 			}
 			if(utilisateur.getListeFavori() != null) {
 				// utilisateurDao.updateListFavori(idUtilisateur, utilisateur.getListeFavori());
+				if(utilisateurDao.findById(idUtilisateur) != null) {
+					Utilisateur user = utilisateurDao.findById(idUtilisateur).get();
+					user.setListeFavori(utilisateur.getListeFavori());
+					user.setId(idUtilisateur);
+					utilisateurDao.save(user);
+				}
 			}
 			if(utilisateur.getListeVue() != null) {
 				// utilisateurDao.updateListVue(idUtilisateur, utilisateur.getListeVue());
