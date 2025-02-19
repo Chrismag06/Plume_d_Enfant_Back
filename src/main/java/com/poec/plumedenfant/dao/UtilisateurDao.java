@@ -23,6 +23,12 @@ public interface UtilisateurDao extends CrudRepository<Utilisateur, Integer> {
 	@Query("UPDATE Utilisateur u set u.mdp =:mdp WHERE u.id =:idUtilisateur")
 	public void updateMdp(int idUtilisateur, String mdp);
 	
+	/*
+	@Modifying
+	@Transactional
+	@Query("UPDATE Utilisateur u set u.listeLike =:listLike WHERE u.id =:idUtilisateur")
+	public void updateListLike(int idUtilisateur, List<Histoire> listLike);
+	
 	@Modifying
 	@Transactional
 	@Query("UPDATE Utilisateur u set u.listeFavori =:listHistoire WHERE u.id =:idUtilisateur")
@@ -32,6 +38,7 @@ public interface UtilisateurDao extends CrudRepository<Utilisateur, Integer> {
 	@Transactional
 	@Query("UPDATE Utilisateur u set u.listeVue =:listeVue WHERE u.id =:idUtilisateur")
 	public void updateListVue(int idUtilisateur, List<Histoire> listeVue);
+	*/
 	
 	Optional<Utilisateur> findByEmail(String email);
 

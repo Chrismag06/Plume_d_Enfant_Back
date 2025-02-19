@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +20,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@DynamicUpdate
 public class Utilisateur implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -32,10 +35,22 @@ public class Utilisateur implements Serializable {
 	@Column
 	private String mdp;
 	
-	@OneToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+	@JoinTable(name="user_like",
+				joinColumns = @JoinColumn(name="utilisateur_id", referencedColumnName = "id"),
+				inverseJoinColumns = @JoinColumn(name="histoire_id", referencedColumnName = "id"))
+	private List<Histoire> listeLike;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+	@JoinTable(name="user_favori",
+				joinColumns = @JoinColumn(name="utilisateur_id", referencedColumnName = "id"),
+				inverseJoinColumns = @JoinColumn(name="histoire_id", referencedColumnName = "id"))
 	private List<Histoire> listeFavori;
 	
-	@OneToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+	@JoinTable(name="user_vues",
+				joinColumns = @JoinColumn(name="utilisateur_id", referencedColumnName = "id"),
+				inverseJoinColumns = @JoinColumn(name="histoire_id", referencedColumnName = "id"))
 	private List<Histoire> listeVue;
 	
 	
@@ -68,6 +83,14 @@ public class Utilisateur implements Serializable {
 
 	public void setMdp(String mdp) {
 		this.mdp = mdp;
+	}
+
+	public List<Histoire> getListeLike() {
+		return listeLike;
+	}
+
+	public void setListeLike(List<Histoire> listeLike) {
+		this.listeLike = listeLike;
 	}
 
 	public List<Histoire> getListeFavori() {

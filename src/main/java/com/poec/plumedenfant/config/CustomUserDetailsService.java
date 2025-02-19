@@ -18,6 +18,8 @@ import com.poec.plumedenfant.dao.model.Utilisateur;
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 	
+	// Classe pour associer les roles aux authorités de Spring security
+	
 	@Autowired
 	private UtilisateurDao utilisateurDao;
 

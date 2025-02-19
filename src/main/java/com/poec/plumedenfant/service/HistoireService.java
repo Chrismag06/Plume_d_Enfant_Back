@@ -108,7 +108,12 @@ public class HistoireService {
 		return histoireDao.findById(idHistoire);
 	}
 	
-	// Récupération de la liste d'histoire
+	// Récupération de la liste d'histoire triée par id
+		public List<Histoire> getAllHistoireSortedById() {
+			return (List<Histoire>) histoireDao.findAllHistoiresSortedById();
+		}
+	
+	// Récupération de la liste d'histoire triée par like
 	public List<Histoire> getAllHistoireSortedByLike() {
 		return (List<Histoire>) histoireDao.findAllHistoiresSortedByLike();
 	}
@@ -132,10 +137,6 @@ public class HistoireService {
 			if(histoire.getCorps() != null) {
 				histoireDao.updateCorps(idHistoire, histoire.getCorps());
 			}
-			// update du nombre de like de l'histoire
-			if(histoire.getNbLike() != null) {
-				histoireDao.updateNbLike(idHistoire, histoire.getNbLike());
-			}
 			// update du titre de l'histoire
 			if(histoire.getTitre() != null) {
 				histoireDao.updateTitre(idHistoire, histoire.getTitre());
@@ -144,6 +145,8 @@ public class HistoireService {
 			if(histoire.getUrlImage() != null) {
 				histoireDao.updateUrlImage(idHistoire, histoire.getUrlImage());
 			}
+			// update du nombre de like à chaque fois
+			histoireDao.updateNbLike(idHistoire);
 		} else {
 			System.out.println("Update impossible : L'histoire n'est pas reconnue");
 		}

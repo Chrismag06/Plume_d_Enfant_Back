@@ -46,11 +46,32 @@ public class UtilisateurService {
 			if(utilisateur.getMdp() != null) {
 				utilisateurDao.updateMdp(idUtilisateur, utilisateur.getMdp());
 			}
-			if(!utilisateur.getListeFavori().isEmpty()) {
-				utilisateurDao.updateListFavori(idUtilisateur, utilisateur.getListeFavori());
+			if(utilisateur.getListeLike() != null) {
+				// utilisateurDao.updateListLike(idUtilisateur, utilisateur.getListeLike());
+				if(utilisateurDao.findById(idUtilisateur) != null) {
+					Utilisateur user = utilisateurDao.findById(idUtilisateur).get();
+					user.setListeLike(utilisateur.getListeLike());
+					user.setId(idUtilisateur);
+					utilisateurDao.save(user);
+				}
 			}
-			if(!utilisateur.getListeVue().isEmpty()) {
-				utilisateurDao.updateListVue(idUtilisateur, utilisateur.getListeVue());
+			if(utilisateur.getListeFavori() != null) {
+				// utilisateurDao.updateListFavori(idUtilisateur, utilisateur.getListeFavori());
+				if(utilisateurDao.findById(idUtilisateur) != null) {
+					Utilisateur user = utilisateurDao.findById(idUtilisateur).get();
+					user.setListeFavori(utilisateur.getListeFavori());
+					user.setId(idUtilisateur);
+					utilisateurDao.save(user);
+				}
+			}
+			if(utilisateur.getListeVue() != null) {
+				// utilisateurDao.updateListVue(idUtilisateur, utilisateur.getListeVue());
+				if(utilisateurDao.findById(idUtilisateur) != null) {
+					Utilisateur user = utilisateurDao.findById(idUtilisateur).get();
+					user.setListeVue(utilisateur.getListeVue());
+					user.setId(idUtilisateur);
+					utilisateurDao.save(user);
+				}
 			}
 		} else {
 			System.out.println("Update impossible : L'utilisateur n'est pas reconnu");
@@ -62,6 +83,8 @@ public class UtilisateurService {
 	public void deleteUtilisateurById(int idUtilisateur) {
 		utilisateurDao.deleteById(idUtilisateur);
 	}
+	
+	
 	
 	
 }
