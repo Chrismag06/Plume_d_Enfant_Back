@@ -35,3 +35,5 @@ build/
 # Ignorer le fichier application.properties contenant des informations sensibles
 /src/main/resources/application.properties
 
+/src/main/resources/projet-tts-450215-354b164845db.json
+

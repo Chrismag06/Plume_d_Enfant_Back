@@ -12,11 +12,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
-
 @Component
 @EnableMethodSecurity
-@AllArgsConstructor
+// @AllArgsConstructor
 public class SecurityConfig {
 	
 	private JwtAuthenticationEntryPoint authenticationEntryPoint;
