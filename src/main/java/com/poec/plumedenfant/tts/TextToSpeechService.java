@@ -1,7 +1,10 @@
-package com.tts;
+package com.poec.plumedenfant.tts;
+
+import com.google.protobuf.ByteString;
 
 public interface TextToSpeechService {
-	void convertTextToSpeech(String text, LanguageCode languageCode, VoiceGender voiceGender, TtsAudioEncoding ttsAudioEncoding, String outputFile) throws Exception;
-	
+
+	ByteString convertTextToSpeech(String text, LanguageCode languageCode, VoiceGender voiceGender, TtsAudioEncoding ttsAudioEncoding, Double speakingRate) throws Exception;
+
 }
 

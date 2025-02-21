@@ -1,4 +1,8 @@
-package com.poec.tts;
+package com.poec.plumedenfant.tts;
+
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.texttospeech.v1.AudioConfig;
@@ -11,12 +15,10 @@ import com.google.cloud.texttospeech.v1.TextToSpeechSettings;
 import com.google.cloud.texttospeech.v1.VoiceSelectionParams;
 import com.google.protobuf.ByteString;
 
-import java.io.*;
-
 public class GoogleTextToSpeechService implements TextToSpeechService {
 
 	@Override
-	public void  convertTextToSpeech(String text, LanguageCode languageCode, VoiceGender voiceGender, TtsAudioEncoding ttsAudioEncoding, String outputFile)  throws Exception {
+	public ByteString convertTextToSpeech(String text, LanguageCode languageCode, VoiceGender voiceGender, TtsAudioEncoding ttsAudioEncoding, Double speakingRate)  throws Exception {
 		
 		// TODO Auto-generated method stub
 		
@@ -43,20 +45,17 @@ public class GoogleTextToSpeechService implements TextToSpeechService {
             // Configuration audio
             AudioConfig audioConfig = AudioConfig.newBuilder()
                     .setAudioEncoding(getAudioEncoding(ttsAudioEncoding))
+                    .setSpeakingRate(speakingRate) 
                     .build();
             
             // Synthèse vocale
             SynthesizeSpeechResponse response = textToSpeechClient.synthesizeSpeech(input, voice, audioConfig);
             
-            ByteString audioContents = response.getAudioContent();
-            try (OutputStream out = new FileOutputStream(outputFile)) {
-                out.write(audioContents.toByteArray());
-                System.out.println("Audio enregistré dans : " + outputFile);
-            }
-            
+            return response.getAudioContent();
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 		
 	}
