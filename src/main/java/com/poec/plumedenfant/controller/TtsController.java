@@ -21,7 +21,7 @@ import com.poec.plumedenfant.tts.VoiceGender;
 
 
 @RestController
-@RequestMapping("/api/tts")
+@RequestMapping("/tts")
 public class TtsController {
 
     @Autowired
@@ -35,6 +35,7 @@ public class TtsController {
             VoiceGender gender = VoiceGender.MALE;
             TtsAudioEncoding encoding = TtsAudioEncoding.LINEAR16;
             byte[]audioData = null;
+            Double speakingRate = 1.0;
 
             TextToSpeechService ttsService = new GoogleTextToSpeechService();
 
@@ -45,7 +46,7 @@ public class TtsController {
                 Optional<Histoire> histoireRecup = histoireService.getHistoireById(idHistoire);
                 if(histoireRecup.isPresent()) {
                     System.out.println("Creation audio");
-                    audioData = ttsService.convertTextToSpeech(histoireRecup.get().getCorps(), languageCode, gender, encoding, 1.0).toByteArray();
+                    audioData = ttsService.convertTextToSpeech(histoireRecup.get().getCorps(), languageCode, gender, encoding, speakingRate).toByteArray();
                     if (audioData == null) {
                         System.out.println("Audio data null...");
                         return ResponseEntity.internalServerError().build(); 
